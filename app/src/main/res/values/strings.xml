@@ -18,4 +18,5 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_activity_list_">List_Activity</string>
+    <string name="title_activity_personal">PersonalActivity</string>
 </resources>
