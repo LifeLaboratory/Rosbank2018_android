@@ -64,9 +64,9 @@ public class Graphics_activity extends AppCompatActivity {
 
         Query_model.MyQuery temp = new Query_model.MyQuery();
         temp.setAction("graph");
-        temp.setFrom(Integer.valueOf(id_from));
+        temp.setFrom(Integer.valueOf(id_to));
         temp.setQuant("second");
-        temp.setTO(Integer.valueOf(id_to));
+        temp.setTO(Integer.valueOf(id_from));
         temp.setSession(session);
         graph_interface.setQuery(temp).enqueue(new Callback<Model>() {
             @Override
