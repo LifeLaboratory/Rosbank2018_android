@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fff"
     tools:context=".MainActivity"
     android:padding="16dp"
     android:id="@+id/main_view"
     android:orientation="vertical">
 
     <ImageView
+        android:layout_marginTop="145dp"
         android:layout_width="match_parent"
         android:layout_height="145dp"
         android:src="@drawable/rosbank_logo" />
@@ -49,12 +51,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/log_button_user"
-        android:text="Пользователь"/>
+        android:text="Вход"
+        android:background="#fff"
+        android:textColor="@color/colorAccent"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/log_button_employee"
-        android:text="Администратор"/>
+    <!--<Button-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/log_button_employee"-->
+        <!--android:text="Администратор"/>-->
 
 </LinearLayout>

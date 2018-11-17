@@ -45,12 +45,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ((Button) findViewById(R.id.log_button_employee)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendRequest(loginView.getText().toString(), passwordView.getText().toString(), "employee");
-            }
-        });
+//        ((Button) findViewById(R.id.log_button_employee)).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                sendRequest(loginView.getText().toString(), passwordView.getText().toString(), "employee");
+//            }
+//        });
     }
 
     private void sendRequest(String loginStr, String passwordStr, final String typeStr) {
