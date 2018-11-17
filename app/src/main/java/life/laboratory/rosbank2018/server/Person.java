@@ -26,7 +26,7 @@ public class Person {
     public class Currency {
         private int id_currency;
         private String name_currency;
-        private String cost;
+        private float cost;
 
 
         public int getIdCurrency() {
@@ -45,11 +45,11 @@ public class Person {
             this.name_currency = name_currency;
         }
 
-        public String getCost() {
+        public float getCost() {
             return cost;
         }
 
-        public void setCost(String cost) {
+        public void setCost(float cost) {
             this.cost = cost;
         }
     }

@@ -45,6 +45,7 @@ public class GraphFragment extends Fragment {
                 toGraph.putExtra(Constants.UUID, UUID);
                 toGraph.putExtra(Constants.ID_FROM, forList[position].split("#")[3]);
                 toGraph.putExtra(Constants.ID_TO, forList[position].split("#")[4]);
+                toGraph.putExtra(Constants.TITLE_KURS, forList[position].split("#")[1]);
                 startActivity(toGraph);
             }
         });
