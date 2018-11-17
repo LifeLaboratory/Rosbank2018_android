@@ -5,6 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#fff"
     tools:context=".Graphics_activity">
 
     <com.jjoe64.graphview.GraphView
@@ -14,14 +15,13 @@
         android:layout_centerVertical="true"
         android:id="@+id/graphView" />
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
+    <Button
+        android:id="@+id/cancel_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:background="?android:attr/windowBackground"
         android:layout_alignParentBottom="true"
-        app:menu="@menu/navigation" />
+        android:background="#fff"
+        android:textColor="@color/colorAccent"
+        android:text="Отмена" />
 
 </RelativeLayout>

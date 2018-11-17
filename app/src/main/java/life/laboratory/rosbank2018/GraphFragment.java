@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import java.util.Objects;
 
+import life.laboratory.rosbank2018.server.Currency_adapter;
 import life.laboratory.rosbank2018.server.Quotations;
 import life.laboratory.rosbank2018.server.Server;
 import retrofit2.Call;
@@ -65,7 +66,7 @@ public class GraphFragment extends Fragment {
                             + "#" + response.body().getQuotation()[i].getCountPurchare() + "#" + response.body().getQuotation()[i].getIdQuotationFrom() + "#" + response.body().getQuotation()[i].getIdQuotationTo();
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(Objects.requireNonNull(getContext()), android.R.layout.simple_list_item_1, forList);
+                Currency_adapter adapter = new Currency_adapter(getContext(), forList);
                 listView.setAdapter(adapter);
             }
 

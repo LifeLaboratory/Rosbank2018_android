@@ -3,6 +3,7 @@ package life.laboratory.rosbank2018;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -94,12 +95,11 @@ public class Graphics_activity extends AppCompatActivity{
                     });
         }
     }
+    String session;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graphics_activity);
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.SERVER_IP) //Базовая часть адреса
@@ -107,33 +107,51 @@ public class Graphics_activity extends AppCompatActivity{
                 .build();
         graph_interface = retrofit.create(Graph_interface.class); //Создаем объект, при помощи которого будем выполнять запросы
 
-        final LineGraphSeries <DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {});
+        final LineGraphSeries <DataPoint> series_one = new LineGraphSeries<DataPoint>(new DataPoint[] {});
+        final LineGraphSeries <DataPoint> series_two = new LineGraphSeries<DataPoint>(new DataPoint[] {});
 
         graphView = (GraphView) findViewById(R.id.graphView);
+        graphView.getViewport().setYAxisBoundsManual(true);
         Intent intent = getIntent();
         id_from = intent.getStringExtra(Constants.ID_FROM);
         id_to = intent.getStringExtra(Constants.ID_TO);
         session = intent.getStringExtra(Constants.UUID);
         Log.d("ROSBANK2018", id_from + " " + id_to);
+        String id_from = intent.getStringExtra(Constants.ID_FROM);
+        String id_to = intent.getStringExtra(Constants.ID_TO);
+        session = intent.getStringExtra(Constants.UUID);
+
+        ((Button) findViewById(R.id.cancel_btn)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toPersonal = new Intent(Graphics_activity.this, PersonalActivity.class);
+                toPersonal.putExtra(Constants.UUID, session);
+                startActivity(toPersonal);
+            }
+        });
+
         Query_model.MyQuery temp = new Query_model.MyQuery();
         temp.setAction("graph");
-        temp.setFrom(Integer.valueOf(id_from));
+        temp.setFrom(Integer.valueOf(id_to));
         temp.setQuant("second");
-        temp.setTO(Integer.valueOf(id_to));
+        temp.setTO(Integer.valueOf(id_from));
         temp.setSession(session);
         graph_interface.setQuery(temp).enqueue(new Callback<Model>() {
             @Override
             public void onResponse(Call<Model> call, Response<Model> response) {
-//                quotation.addAll(response.body().getQuatation());
                 Model.quatation q = null;
-                for (int i = 0; i < response.body().getQuatation().length; i++){
-//                for (Model.quatation q : response.body().getQuatation()){
-                    q = response.body().getQuatation()[i];
+                Model.quatation[] arr = response.body().getQuatation();
+                for (int i = 0; i < arr.length; i++) {
+                    q = arr[i];
                     Log.d("ROSBANK2018", String.valueOf(Double.valueOf(i)) + " " + String.valueOf(q.getCountPurchase()));
-                    series.appendData(new DataPoint(Double.valueOf(i), q.getCountPurchase()), true, 100);
+                    Log.d("ROSBANK2018", String.valueOf(Double.valueOf(i)) + " " + String.valueOf(q.getCountSale()));
+                    series_one.appendData(new DataPoint((double) i, q.getCountPurchase()), true, );
+                    series_two.appendData(new DataPoint((double) i, q.getCountSale()), true, 500);
                 }
-
-                graphView.addSeries(series);
+                series_one.setColor(Color.BLACK);
+                series_two.setColor(Color.RED);
+                graphView.addSeries(series_one);
+                graphView.addSeries(series_two);
             }
             @Override
             public void onFailure(Call<Model> call, Throwable t) {
