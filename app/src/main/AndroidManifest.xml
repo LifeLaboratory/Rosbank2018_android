@@ -6,26 +6,33 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity
-            android:name=".Graphics_activity"
-            android:label="@string/title_activity_graphics_activity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter></activity>
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name=".List_Activity"
             android:label="@string/title_activity_list_" >
         </activity>
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login" />
+        <activity
+            android:name=".Graphics_activity"
+            android:label="@string/title_activity_graphics_activity" />
+        <activity
+            android:name=".PersonalActivity"
+            android:label="@string/title_activity_personal"></activity>
     </application>
 
 </manifest>
