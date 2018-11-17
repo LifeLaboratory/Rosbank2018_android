@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.91.6.105:13451/")
+                .baseUrl(Constants.SERVER_IP)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         login = retrofit.create(Server.class);
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         login.auth(new User(loginStr, passwordStr, typeStr)).enqueue(new Callback<Session>() {
             @Override
             public void onResponse(Call<Session> call, Response<Session> response) {
-                if (response.body() != null) {
+                if (response.body() != null && !response.body().getSession().equals("")) {
                     Log.d("ROSBANK2018", "Session: " + response.body().getSession());
                     switch (typeStr) {
                         case "client": {

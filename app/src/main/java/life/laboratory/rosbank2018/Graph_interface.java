@@ -1,13 +1,9 @@
 package life.laboratory.rosbank2018;
 
-import org.json.JSONObject;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
 
 import retrofit2.http.POST;
-import retrofit2.http.Query;
 
 public interface Graph_interface {
 

@@ -27,6 +27,7 @@ public class Graphics_activity extends AppCompatActivity {
     private Retrofit retrofit;
     private Graph_interface graph_interface;
     ArrayList <Model.quatation> quotation = new ArrayList<>();
+    GraphView graphView;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -44,12 +45,6 @@ public class Graphics_activity extends AppCompatActivity {
         }
     };
 
-
-
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,38 +53,38 @@ public class Graphics_activity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.91.6.105:13452/") //Базовая часть адреса
+                .baseUrl(Constants.SERVER_IP) //Базовая часть адреса
                 .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                 .build();
         graph_interface = retrofit.create(Graph_interface.class); //Создаем объект, при помощи которого будем выполнять запросы
 
-        LineGraphSeries <DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
-        });
+        final LineGraphSeries <DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {});
 
-        GraphView graphView;// = new LineGraphView(this, "График каких-то данных");
         graphView = (GraphView) findViewById(R.id.graphView);
-        graphView.addSeries(series);
         Intent intent = getIntent();
-        Integer id_from = intent.getIntExtra(Constants.ID_FROM, 0);
-        Integer id_to = intent.getIntExtra(Constants.ID_TO, 0);
+        String id_from = intent.getStringExtra(Constants.ID_FROM);
+        String id_to = intent.getStringExtra(Constants.ID_TO);
         String session = intent.getStringExtra(Constants.UUID);
+        Log.d("ROSBANK2018", id_from + " " + id_to);
         Query_model.MyQuery temp = new Query_model.MyQuery();
         temp.setAction("graph");
-        temp.setFrom(id_from);
+        temp.setFrom(Integer.valueOf(id_from));
         temp.setQuant("second");
-        temp.setTO(id_to);
+        temp.setTO(Integer.valueOf(id_to));
         temp.setSession(session);
         graph_interface.setQuery(temp).enqueue(new Callback<Model>() {
             @Override
             public void onResponse(Call<Model> call, Response<Model> response) {
-                for(Model.quatation temp1 : response.body().getQuatation()){
-                    quotation.add(temp1);
+//                quotation.addAll(response.body().getQuatation());
+                Model.quatation q = null;
+                for (int i = 0; i < response.body().getQuatation().length; i++){
+//                for (Model.quatation q : response.body().getQuatation()){
+                    q = response.body().getQuatation()[i];
+                    Log.d("ROSBANK2018", String.valueOf(Double.valueOf(i)) + " " + String.valueOf(q.getCountPurchase()));
+                    series.appendData(new DataPoint(Double.valueOf(i), q.getCountPurchase()), true, 100);
                 }
+
+                graphView.addSeries(series);
             }
             @Override
             public void onFailure(Call<Model> call, Throwable t) {
