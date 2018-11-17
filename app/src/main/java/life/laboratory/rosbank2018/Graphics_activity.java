@@ -74,15 +74,16 @@ public class Graphics_activity extends AppCompatActivity {
         GraphView graphView;// = new LineGraphView(this, "График каких-то данных");
         graphView = (GraphView) findViewById(R.id.graphView);
         graphView.addSeries(series);
-        //Intent intent = getIntent();
-        //Integer id_from = intent.getIntExtra(id_quatation_from);
-        //Integer id_to = intent.getIntExtra(id_quatation_to);
+        Intent intent = getIntent();
+        Integer id_from = intent.getIntExtra(Constants.ID_FROM, 0);
+        Integer id_to = intent.getIntExtra(Constants.ID_TO, 0);
+        String session = intent.getStringExtra(Constants.UUID);
         Query_model.MyQuery temp = new Query_model.MyQuery();
         temp.setAction("graph");
-        temp.setFrom(1);
+        temp.setFrom(id_from);
         temp.setQuant("second");
-        temp.setTO(2);
-        temp.setSession("863af63e-c005-d8a7-0bc3-2cfdc5b59d52");
+        temp.setTO(id_to);
+        temp.setSession(session);
         graph_interface.setQuery(temp).enqueue(new Callback<Model>() {
             @Override
             public void onResponse(Call<Model> call, Response<Model> response) {
