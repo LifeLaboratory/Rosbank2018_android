@@ -14,7 +14,7 @@ public class Buying {
         this.buying = buying;
     }
 
-    public class Buy_class {
+    public static class Buy_class {
         private Integer From;
 
         public void setFrom(Integer from) {
