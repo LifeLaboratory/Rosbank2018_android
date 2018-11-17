@@ -34,6 +34,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static android.widget.Toast.LENGTH_LONG;
 
 public class Graphics_activity extends AppCompatActivity{
+    public Dialog dia;
+
     public String id_from;
     public String id_to;
     public String session;
@@ -73,7 +75,7 @@ public class Graphics_activity extends AppCompatActivity{
                     .build();
             buying_interface = retrofit.create(Buying_interface.class); //Создаем объект, при помощи которого будем выполнять за// просы
             AlertDialog.Builder builder = new AlertDialog.Builder(Graphics_activity.this);
-
+            dia = builder.create();
             LayoutInflater inflater = Graphics_activity.this.getLayoutInflater();
             builder.setView(inflater.inflate(R.layout.buy_dialog, null))
                     .setPositiveButton("Купить", new DialogInterface.OnClickListener() {
@@ -81,6 +83,24 @@ public class Graphics_activity extends AppCompatActivity{
                         public void onClick(DialogInterface dialog, int id) {
                             toSend.setAction("sales");
                             toSend.setCount_send(Integer.valueOf(count.getText().toString()));
+                            buying_interface.setBuying(toSend).enqueue(new Callback<Buying>() {
+                                @Override
+                                public void onResponse(Call<Buying> call, Response<Buying> response) {
+                                    if(response.body().getStatus().equals(200)){
+                                        Toast.makeText(getApplicationContext(),"Покупка совершена",LENGTH_LONG).show();
+                                        dia.cancel();
+                                    }
+                                    else{
+                                        Toast.makeText(getApplicationContext(),"Покупка не совершена",LENGTH_LONG).show();
+                                        dia.cancel();
+                                    }
+                                }
+                                @Override
+                                public void onFailure(Call<Buying> call, Throwable t) {
+                                    Toast.makeText(getApplicationContext(),"Произошла ошибка соединения с сервером",LENGTH_LONG).show();
+                                    dia.cancel();
+                                }
+                            });
                         }
                     })
                     .setNegativeButton("Продать", new DialogInterface.OnClickListener() {
@@ -91,11 +111,28 @@ public class Graphics_activity extends AppCompatActivity{
                             Integer temp = toSend.getTo();
                             toSend.setTo(toSend.getFrom());
                             toSend.setFrom(temp);
+                            buying_interface.setBuying(toSend).enqueue(new Callback<Buying>() {
+                                @Override
+                                public void onResponse(Call<Buying> call, Response<Buying> response) {
+                                    if(response.body().getStatus().equals(200)){
+                                        Toast.makeText(getApplicationContext(),"Продажа совершена",LENGTH_LONG).show();
+                                        dia.cancel();
+                                    }
+                                    else{
+                                        Toast.makeText(getApplicationContext(),"Продажа не совершена",LENGTH_LONG).show();
+                                        dia.cancel();
+                                    }
+                                }
+                                @Override
+                                public void onFailure(Call<Buying> call, Throwable t) {
+                                    Toast.makeText(getApplicationContext(),"Произошла ошибка соединения с сервером",LENGTH_LONG).show();
+                                    dia.cancel();
+                                }
+                            });
                         }
                     });
         }
-    }
-    String session;
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
