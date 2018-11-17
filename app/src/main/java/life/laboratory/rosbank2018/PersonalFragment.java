@@ -32,8 +32,6 @@ public class PersonalFragment extends Fragment {
         LayoutInflater ltInflater = getLayoutInflater();
         this.view = ltInflater.inflate(R.layout.personal, null, false);
 
-        Log.d("ROSBANK2018", "Hello from PersonalFragment");
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.91.6.105:13452/")
                 .addConverterFactory(GsonConverterFactory.create())

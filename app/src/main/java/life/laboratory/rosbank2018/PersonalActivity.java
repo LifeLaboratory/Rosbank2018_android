@@ -38,6 +38,7 @@ public class PersonalActivity extends AppCompatActivity {
                 } break;
                 case R.id.navigation_graph: {
                     selectedFragment = new GraphFragment();
+                    ((GraphFragment) selectedFragment).setUUID(UUID);
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, selectedFragment).commit();
                 } break;
                 case R.id.navigation_exit: {

@@ -12,4 +12,7 @@ public interface Server {
 
     @GET("/api/v1/quotation")
     Call<Person> getUserInfo(@Query("Session") String UUID);
+
+    @GET("/api/v1/quotation")
+    Call<Quotations> getQuotations(@Query("Session") String UUID, @Query("Action") String action);
 }
