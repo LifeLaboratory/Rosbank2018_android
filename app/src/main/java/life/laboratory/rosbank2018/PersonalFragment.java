@@ -11,6 +11,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import life.laboratory.rosbank2018.server.Person;
 import life.laboratory.rosbank2018.server.Server;
 import retrofit2.Call;
@@ -33,7 +35,7 @@ public class PersonalFragment extends Fragment {
         this.view = ltInflater.inflate(R.layout.personal, null, false);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.91.6.105:13452/")
+                .baseUrl(Constants.SERVER_IP)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         info = retrofit.create(Server.class);
@@ -46,8 +48,10 @@ public class PersonalFragment extends Fragment {
                 for (int i = 0; i < response.body().getCurrency().length; i++) {
                     forList[i] = response.body().getCurrency()[i].getIdCurrency() + "#" + response.body().getCurrency()[i].getNameCurrency() + "#" + response.body().getCurrency()[i].getCost();
                 }
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, forList);
-                ((ListView) view.findViewById(R.id.user_money)).setAdapter(adapter);
+                if (getContext() != null) {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, forList);
+                    ((ListView) view.findViewById(R.id.user_money)).setAdapter(adapter);
+                }
             }
 
             @Override

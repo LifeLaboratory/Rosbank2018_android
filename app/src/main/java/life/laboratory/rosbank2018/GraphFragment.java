@@ -12,6 +12,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.Objects;
+
 import life.laboratory.rosbank2018.server.Quotations;
 import life.laboratory.rosbank2018.server.Server;
 import retrofit2.Call;
@@ -38,7 +40,6 @@ public class GraphFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("ROSBANK2018", forList[position]);
                 Intent toGraph = new Intent(getContext(), Graphics_activity.class);
                 toGraph.putExtra(Constants.UUID, UUID);
                 toGraph.putExtra(Constants.ID_FROM, forList[position].split("#")[3]);
@@ -48,7 +49,7 @@ public class GraphFragment extends Fragment {
         });
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.91.6.105:13452/")
+                .baseUrl(Constants.SERVER_IP)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         info = retrofit.create(Server.class);
@@ -64,7 +65,7 @@ public class GraphFragment extends Fragment {
                             + "#" + response.body().getQuotation()[i].getCountPurchare() + "#" + response.body().getQuotation()[i].getIdQuotationFrom() + "#" + response.body().getQuotation()[i].getIdQuotationTo();
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, forList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(Objects.requireNonNull(getContext()), android.R.layout.simple_list_item_1, forList);
                 listView.setAdapter(adapter);
             }
 

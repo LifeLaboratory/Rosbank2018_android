@@ -15,10 +15,10 @@ public class Quotations {
     public class Quotation {
 
         private int id_quotation_from;
-        private float count_purchare;
+        private float Count_purchare;
         private int id_quotation_to;
-        private String name;
-        private float count_sale;
+        private String Name;
+        private float Count_sale;
 
         public int getIdQuotationFrom() {
             return id_quotation_from;
@@ -29,11 +29,11 @@ public class Quotations {
         }
 
         public float getCountPurchare() {
-            return count_purchare;
+            return Count_purchare;
         }
 
         public void setCountPurchare(float count_purchare) {
-            this.count_purchare = count_purchare;
+            this.Count_purchare = count_purchare;
         }
 
         public int getIdQuotationTo() {
@@ -45,19 +45,19 @@ public class Quotations {
         }
 
         public String getName() {
-            return name;
+            return Name;
         }
 
         public void setName(String name) {
-            this.name = name;
+            this.Name = name;
         }
 
         public float getCountSale() {
-            return count_sale;
+            return Count_sale;
         }
 
         public void setCountSale(float count_sale) {
-            this.count_sale = count_sale;
+            this.Count_sale = count_sale;
         }
     }
 }
