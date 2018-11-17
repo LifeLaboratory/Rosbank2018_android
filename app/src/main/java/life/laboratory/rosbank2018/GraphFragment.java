@@ -1,5 +1,6 @@
 package life.laboratory.rosbank2018;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -23,12 +25,27 @@ public class GraphFragment extends Fragment {
     private View view;
     private Server info;
     private String UUID;
+    private ListView listView;
+    private String[] forList;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LayoutInflater ltInflater = getLayoutInflater();
+        final LayoutInflater ltInflater = getLayoutInflater();
         this.view = ltInflater.inflate(R.layout.graph, null, false);
+
+        listView = (ListView) view.findViewById(R.id.quotations);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("ROSBANK2018", forList[position]);
+                Intent toGraph = new Intent(getContext(), Graphics_activity.class);
+                toGraph.putExtra(Constants.UUID, UUID);
+                toGraph.putExtra(Constants.ID_FROM, forList[position].split("#")[3]);
+                toGraph.putExtra(Constants.ID_TO, forList[position].split("#")[4]);
+                startActivity(toGraph);
+            }
+        });
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.91.6.105:13452/")
@@ -38,17 +55,17 @@ public class GraphFragment extends Fragment {
         info.getQuotations(UUID, "list").enqueue(new Callback<Quotations>() {
             @Override
             public void onResponse(Call<Quotations> call, Response<Quotations> response) {
-                String[] forList = new String[response.body().getQuotation().length];
+                forList = new String[response.body().getQuotation().length];
                 for (Quotations.Quotation q : response.body().getQuotation()){
-                    Log.d("ROSKBANK2018", q.getName());
+                    Log.d("ROSBANK2018", q.getName());
                 }
                 for (int i = 0; i < response.body().getQuotation().length; i++) {
                     forList[i] = response.body().getQuotation()[i].getCountSale() + "#" + response.body().getQuotation()[i].getName()
-                            + "#" + response.body().getQuotation()[i].getCountPurchare() + "#" + response.body().getQuotation()[i].getIdQuotationFrom() + "#" + response.body().getQuotation()[i].getIdQuotationFrom();
+                            + "#" + response.body().getQuotation()[i].getCountPurchare() + "#" + response.body().getQuotation()[i].getIdQuotationFrom() + "#" + response.body().getQuotation()[i].getIdQuotationTo();
                 }
 
                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, forList);
-                ((ListView) view.findViewById(R.id.quotations)).setAdapter(adapter);
+                listView.setAdapter(adapter);
             }
 
             @Override
