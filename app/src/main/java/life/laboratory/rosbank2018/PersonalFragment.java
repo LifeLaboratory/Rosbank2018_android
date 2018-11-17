@@ -8,12 +8,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.Objects;
-
+import life.laboratory.rosbank2018.server.Currency_adapter;
 import life.laboratory.rosbank2018.server.Person;
 import life.laboratory.rosbank2018.server.Server;
 import retrofit2.Call;
@@ -48,9 +46,8 @@ public class PersonalFragment extends Fragment {
                 String[] forList = new String[response.body().getCurrency().length];
                 for (int i = 0; i < response.body().getCurrency().length; i++) {
                     forList[i] = response.body().getCurrency()[i].getIdCurrency() + "#" + response.body().getCurrency()[i].getNameCurrency() + "#" + String.valueOf(response.body().getCurrency()[i].getCost());
-                    Log.d("ROSBANK2018", forList[i]);
                 }
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(PersonalFragment.this.context, android.R.layout.simple_list_item_1, forList);
+                Currency_adapter adapter = new Currency_adapter(PersonalFragment.this.context, forList);
                 ((ListView) view.findViewById(R.id.user_money)).setAdapter(adapter);
             }
 
