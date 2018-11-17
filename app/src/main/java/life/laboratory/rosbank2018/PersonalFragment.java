@@ -1,5 +1,6 @@
 package life.laboratory.rosbank2018;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -46,12 +47,11 @@ public class PersonalFragment extends Fragment {
                 ((TextView) view.findViewById(R.id.message)).setText(response.body().getName());
                 String[] forList = new String[response.body().getCurrency().length];
                 for (int i = 0; i < response.body().getCurrency().length; i++) {
-                    forList[i] = response.body().getCurrency()[i].getIdCurrency() + "#" + response.body().getCurrency()[i].getNameCurrency() + "#" + response.body().getCurrency()[i].getCost();
+                    forList[i] = response.body().getCurrency()[i].getIdCurrency() + "#" + response.body().getCurrency()[i].getNameCurrency() + "#" + String.valueOf(response.body().getCurrency()[i].getCost());
+                    Log.d("ROSBANK2018", forList[i]);
                 }
-                if (getContext() != null) {
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, forList);
-                    ((ListView) view.findViewById(R.id.user_money)).setAdapter(adapter);
-                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(PersonalFragment.this.context, android.R.layout.simple_list_item_1, forList);
+                ((ListView) view.findViewById(R.id.user_money)).setAdapter(adapter);
             }
 
             @Override
@@ -73,5 +73,11 @@ public class PersonalFragment extends Fragment {
 
     public void setUUID(String UUID) {
         this.UUID = UUID;
+    }
+
+    private Context context;
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 }

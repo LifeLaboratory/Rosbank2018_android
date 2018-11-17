@@ -34,6 +34,7 @@ public class PersonalActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home: {
                     selectedFragment = new PersonalFragment();
+                    ((PersonalFragment) selectedFragment).setContext(PersonalActivity.this);
                     ((PersonalFragment) selectedFragment).setUUID(UUID);
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, selectedFragment).commit();
                 } break;
@@ -58,6 +59,8 @@ public class PersonalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_personal);
 
         this.UUID = getIntent().getStringExtra(Constants.UUID);
+
+        Log.d("ROSBANK2018", this.UUID);
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
