@@ -24,6 +24,7 @@
             android:hint="Логин"
             android:inputType="textEmailAddress"
             android:maxLines="1"
+            android:text="boris"
             android:singleLine="true" />
 
     </android.support.design.widget.TextInputLayout>
@@ -39,6 +40,7 @@
             android:hint="Пароль"
             android:inputType="textPassword"
             android:maxLines="1"
+            android:text="boris"
             android:singleLine="true" />
 
     </android.support.design.widget.TextInputLayout>
@@ -46,7 +48,13 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/log_button"
-        android:text="Авторизация"/>
+        android:id="@+id/log_button_user"
+        android:text="Пользователь"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/log_button_employee"
+        android:text="Администратор"/>
 
 </LinearLayout>

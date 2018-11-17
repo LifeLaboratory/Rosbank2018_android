@@ -33,33 +33,53 @@ public class MainActivity extends AppCompatActivity {
                 .baseUrl(Constants.SERVER_IP)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        login = retrofit.create(Server.class); //Создаем объект, при помощи которого будем выполнять запросы
+        login = retrofit.create(Server.class);
 
         loginView = (TextView) findViewById(R.id.login);
         passwordView = (TextView) findViewById(R.id.password);
 
-        ((Button) findViewById(R.id.log_button)).setOnClickListener(new View.OnClickListener() {
+        ((Button) findViewById(R.id.log_button_user)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login.auth(new User(loginView.getText().toString(), passwordView.getText().toString())).enqueue(new Callback<Session>() {
-                    @Override
-                    public void onResponse(Call<Session> call, Response<Session> response) {
-                        if (response.body() != null) {
-                            Log.d("ROSBANK2018", "Session: " + response.body().getSession());
+                sendRequest(loginView.getText().toString(), passwordView.getText().toString(), "client");
+            }
+        });
+
+        ((Button) findViewById(R.id.log_button_employee)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendRequest(loginView.getText().toString(), passwordView.getText().toString(), "employee");
+            }
+        });
+    }
+
+    private void sendRequest(String loginStr, String passwordStr, final String typeStr) {
+        login.auth(new User(loginStr, passwordStr, typeStr)).enqueue(new Callback<Session>() {
+            @Override
+            public void onResponse(Call<Session> call, Response<Session> response) {
+                if (response.body() != null) {
+                    Log.d("ROSBANK2018", "Session: " + response.body().getSession());
+                    switch (typeStr) {
+                        case "client": {
                             Intent toPersonalArea = new Intent(MainActivity.this, PersonalActivity.class);
                             toPersonalArea.putExtra(Constants.UUID, response.body().getSession());
                             startActivity(toPersonalArea);
-                        } else {
-                            Snackbar.make(((LinearLayout) findViewById(R.id.main_view)), "Ошибка авторизации", Snackbar.LENGTH_LONG)
+                        } break;
+                        case "employee": {
+                            Snackbar.make(((LinearLayout) findViewById(R.id.main_view)), "Авторизация администратора", Snackbar.LENGTH_LONG)
                                     .setAction("Закрыть", null).show();
-                        }
+                        } break;
                     }
-                    @Override
-                    public void onFailure(Call<Session> call, Throwable t) {
-                        Snackbar.make(((LinearLayout) findViewById(R.id.main_view)), "Ошибка авторизации: " + t.getMessage(), Snackbar.LENGTH_LONG)
-                                .setAction("Закрыть", null).show();
-                    }
-                });
+
+                } else {
+                    Snackbar.make(((LinearLayout) findViewById(R.id.main_view)), "Ошибка авторизации", Snackbar.LENGTH_LONG)
+                            .setAction("Закрыть", null).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<Session> call, Throwable t) {
+                Snackbar.make(((LinearLayout) findViewById(R.id.main_view)), "Ошибка авторизации: " + t.getMessage(), Snackbar.LENGTH_LONG)
+                        .setAction("Закрыть", null).show();
             }
         });
     }

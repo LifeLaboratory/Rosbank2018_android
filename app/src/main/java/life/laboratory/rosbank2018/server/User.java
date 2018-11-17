@@ -3,10 +3,12 @@ package life.laboratory.rosbank2018.server;
 public class User {
     private String Login;
     private String Password;
+    private String Page;
 
-    public User(String login, String password) {
+    public User(String login, String password, String page) {
         this.Login = login;
         this.Password = password;
+        this.Page = page;
     }
 
     public String getLogin() {
@@ -23,5 +25,13 @@ public class User {
 
     public void setPassword(String password) {
         this.Password = password;
+    }
+
+    public String getPage() {
+        return Page;
+    }
+
+    public void setPage(String page) {
+        Page = page;
     }
 }

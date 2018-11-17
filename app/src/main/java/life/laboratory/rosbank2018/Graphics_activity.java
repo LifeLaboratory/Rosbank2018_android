@@ -22,9 +22,9 @@ public class Graphics_activity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     return true;
-                case R.id.navigation_dashboard:
+                case R.id.navigation_graph:
                     return true;
-                case R.id.navigation_notifications:
+                case R.id.navigation_exit:
                     return true;
             }
             return false;
