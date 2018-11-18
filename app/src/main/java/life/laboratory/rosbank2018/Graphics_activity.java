@@ -1,5 +1,6 @@
 package life.laboratory.rosbank2018;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,17 +14,23 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LabelFormatter;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -50,6 +57,7 @@ public class Graphics_activity extends AppCompatActivity{
     private Buying_interface buying_interface;
     ArrayList <Model.quatation> quotation = new ArrayList<>();
     GraphView graphView;
+    boolean touchGraph = false;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -101,13 +109,13 @@ public class Graphics_activity extends AppCompatActivity{
                                         dia.cancel();
                                     }
                                     else{
-                                        Toast.makeText(getApplicationContext(),"Покупка не совершена",LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(),"Покупка не совершена",Toast.LENGTH_LONG).show();
                                         dia.cancel();
                                     }
                                 }
                                 @Override
                                 public void onFailure(Call<Buying> call, Throwable t) {
-                                    Toast.makeText(getApplicationContext(),"Произошла ошибка соединения с сервером",LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),"Произошла ошибка соединения с сервером",Toast.LENGTH_LONG).show();
                                     dia.cancel();
                                 }
                             });
@@ -125,17 +133,17 @@ public class Graphics_activity extends AppCompatActivity{
                                 @Override
                                 public void onResponse(Call<Buying> call, Response<Buying> response) {
                                     if(response.body().getStatus().equals(200)){
-                                        Toast.makeText(getApplicationContext(),"Продажа совершена",LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(),"Продажа совершена",Toast.LENGTH_LONG).show();
                                         dia.cancel();
                                     }
                                     else{
-                                        Toast.makeText(getApplicationContext(),"Продажа не совершена",LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(),"Продажа не совершена",Toast.LENGTH_LONG).show();
                                         dia.cancel();
                                     }
                                 }
                                 @Override
                                 public void onFailure(Call<Buying> call, Throwable t) {
-                                    Toast.makeText(getApplicationContext(),"Произошла ошибка соединения с сервером",LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),"Произошла ошибка соединения с сервером",Toast.LENGTH_LONG).show();
                                     dia.cancel();
                                 }
                             });
@@ -147,6 +155,7 @@ public class Graphics_activity extends AppCompatActivity{
     String titleForGraph;
     LineGraphSeries <DataPoint> series_one, series_two;
     DataPoint[] oneData, twoData;
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,9 +167,6 @@ public class Graphics_activity extends AppCompatActivity{
                 .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                 .build();
         graph_interface = retrofit.create(Graph_interface.class); //Создаем объект, при помощи которого будем выполнять запросы
-
-//        series_one = new LineGraphSeries<DataPoint>(new DataPoint[] {});
-//        series_two = new LineGraphSeries<DataPoint>(new DataPoint[] {});
 
         graphView = (GraphView) findViewById(R.id.graphView);
         Intent intent = getIntent();
@@ -193,6 +199,23 @@ public class Graphics_activity extends AppCompatActivity{
         Button buy = (Button) findViewById(R.id.buy_button);
         buy.setOnClickListener(buyListener);
 
+        graphView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                touchGraph = true;
+                return Graphics_activity.super.onTouchEvent(event);
+            }
+        });
+        graphView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                touchGraph = true;
+            }
+        });
+        String patternFrom = "yyyy-MM-dd HH:mm:ss.SSSSSS";
+        SimpleDateFormat simpleDateFormatFrom = new SimpleDateFormat(patternFrom);
+        String patternTo = "HH:mm";
+        SimpleDateFormat simpleDateFormatTo = new SimpleDateFormat(patternTo);
         graph_interface.setQuery(temp).subscribeOn(Schedulers.newThread())
                 .repeatWhen(a -> a.flatMap(n -> Observable.timer(5, TimeUnit.SECONDS)))
                 .retryWhen(a -> a.flatMap(n -> Observable.timer(5, TimeUnit.SECONDS)))
@@ -202,50 +225,55 @@ public class Graphics_activity extends AppCompatActivity{
                             Model.quatation[] arr = response.getQuatation();
                             oneData = new DataPoint[arr.length];
                             twoData = new DataPoint[arr.length];
+                            Double min = 9999999.0, max = 0.0;
                             for (int i = 1; i <= arr.length; i++) {
                                 q = arr[arr.length - i];
-                                oneData[i - 1] = new DataPoint(i, q.getCountPurchase());
-                                twoData[i - 1] = new DataPoint(i, q.getCountSale());
+                                Date date = simpleDateFormatFrom.parse(q.getQuant());
+//                                Log.d("ROSBANK2018", date.toString());
+//                                Log.d("ROSBANK2018", q.getQuant());
+                                oneData[i - 1] = new DataPoint(date, q.getCountPurchase());
+                                twoData[i - 1] = new DataPoint(date, q.getCountSale());
+//                                Log.d("ROSBANK2018", String.valueOf(q.getCountPurchase()) + " " + String.valueOf(q.getCountSale()));
+                                if (q.getCountPurchase() < min) {
+                                    min = q.getCountPurchase();
+                                }
+                                if (q.getCountSale() < min) {
+                                    min = q.getCountSale();
+                                }
+                                if (q.getCountPurchase() > max) {
+                                    max = q.getCountPurchase();
+                                }
+                                if (q.getCountSale() < max) {
+                                    max = q.getCountSale();
+                                }
                             }
                             series_one = new LineGraphSeries<DataPoint>(oneData);
                             series_two = new LineGraphSeries<DataPoint>(twoData);
                             series_one.setColor(Color.BLACK);
                             series_two.setColor(Color.RED);
-                            graphView.removeAllSeries();
-                            graphView.addSeries(series_one);
-                            graphView.addSeries(series_two);
+                            if (!touchGraph) {
+                                graphView.removeAllSeries();
+                                graphView.addSeries(series_one);
+                                graphView.addSeries(series_two);
+                            }
+                            graphView.getViewport().setMaxY(max * 1.01);
+                            graphView.getViewport().setMinY(min * 0.99);
+                            graphView.getViewport().setScalable(true);
+                            graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+                                @Override
+                                public String formatLabel(double value, boolean isValueX) {
+                                    if (isValueX) {
+                                        return simpleDateFormatTo.format(new Date((long) value));
+                                    } else {
+                                        return super.formatLabel(value, false);
+                                    }
+                                }
+                            });
+                            graphView.getGridLabelRenderer().setNumHorizontalLabels(6);
                         }, e -> {
                             Log.d("ROSBANK2018", e.getMessage());
                         }
                 );
-
-//        graph_interface.setQuery(temp).enqueue(new Callback<Model>() {
-//            @Override
-//            public void onResponse(Call<Model> call, Response<Model> response) {
-//                Model.quatation q = null;
-//                Model.quatation[] arr = response.body().getQuatation();
-//                oneData = new DataPoint[arr.length];
-//                twoData = new DataPoint[arr.length];
-//                for (int i = 1; i <= arr.length; i++) {
-//                    q = arr[arr.length - i];
-////                    Log.d("ROSBANK2018", String.valueOf(Double.valueOf(i)) + " " + String.valueOf(q.getCountPurchase()));
-////                    Log.d("ROSBANK2018", String.valueOf(Double.valueOf(i)) + " " + String.valueOf(q.getCountSale()));
-//                    oneData[i-1] = new DataPoint(i, q.getCountPurchase());
-//                    twoData[i-1] = new DataPoint(i, q.getCountSale());
-//                }
-//                series_one = new LineGraphSeries<DataPoint>(oneData);
-//                series_two = new LineGraphSeries<DataPoint>(twoData);
-//                series_one.setColor(Color.BLACK);
-//                series_two.setColor(Color.RED);
-//                graphView.addSeries(series_one);
-//                graphView.addSeries(series_two);
-//            }
-//            @Override
-//            public void onFailure(Call<Model> call, Throwable t) {
-//                Toast.makeText(getApplicationContext(),"Нет соединения с сервером",LENGTH_LONG).show();
-//            }
-//        });
-
     }
 
 }

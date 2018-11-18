@@ -1,5 +1,6 @@
 package life.laboratory.rosbank2018;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -56,18 +57,24 @@ public class GraphFragment extends Fragment {
             @Override
             public void onResponse(Call<Quotations> call, Response<Quotations> response) {
                 if (response.body().getQuotation() != null) {
-                forList = new String[response.body().getQuotation().length];
-                for (Quotations.Quotation q : response.body().getQuotation()){
-                    Log.d("ROSBANK2018", q.getName());
-                }
-                for (int i = 0; i < response.body().getQuotation().length; i++) {
-                    forList[i] = response.body().getQuotation()[i].getCountSale() + "#" + response.body().getQuotation()[i].getName()
-                            + "#" + response.body().getQuotation()[i].getCountPurchare() + "#" + response.body().getQuotation()[i].getIdQuotationFrom() + "#" + response.body().getQuotation()[i].getIdQuotationTo();
-                }
+                    forList = new String[response.body().getQuotation().length];
+                    for (Quotations.Quotation q : response.body().getQuotation()) {
+                        Log.d("ROSBANK2018", q.getName());
+                    }
+                    for (int i = 0; i < response.body().getQuotation().length; i++) {
+                        forList[i] = response.body().getQuotation()[i].getCountSale() + "#" + response.body().getQuotation()[i].getName()
+                                + "#" + response.body().getQuotation()[i].getCountPurchare() + "#" + response.body().getQuotation()[i].getIdQuotationFrom() + "#" + response.body().getQuotation()[i].getIdQuotationTo();
+                    }
 
-                Currency_adapter adapter = new Currency_adapter(getContext(), forList);
-                listView.setAdapter(adapter);
-            }}
+                    Context context = getContext();
+                    if (context != null) {
+                        Currency_adapter adapter = new Currency_adapter(context, forList);
+                        listView.setAdapter(adapter);
+                    }
+                } else {
+                    Log.d("ROSBANK2018", "Not found data for forList");
+                }
+            }
 
             @Override
             public void onFailure(Call<Quotations> call, Throwable t) {
