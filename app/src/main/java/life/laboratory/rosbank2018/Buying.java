@@ -60,6 +60,15 @@ public class Buying {
         public void setSession(String session) {
             Session = session;
         }
+        private Double Cost_user;
+
+        public Double getCost_user() {
+            return Cost_user;
+        }
+
+        public void setCost_user(Double cost_user) {
+            Cost_user = cost_user;
+        }
     };
 
 

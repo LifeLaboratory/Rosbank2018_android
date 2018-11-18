@@ -103,7 +103,8 @@ public class Graphics_activity extends AppCompatActivity{
                             toSend.setAction("sales");
                             EditText count = view.findViewById(R.id.count);
                             toSend.setCount_send(Integer.valueOf(count.getText().toString()));
-                            buying_interface.setBuying(toSend, fixPriceBuy).enqueue(new Callback<Buying>() {
+                            toSend.setCost_user(fixPriceBuy);
+                            buying_interface.setBuying(toSend).enqueue(new Callback<Buying>() {
                                 @Override
                                 public void onResponse(Call<Buying> call, Response<Buying> response) {
                                     Log.d("ROSBANK2018", String.valueOf(response.body().getStatus()));
@@ -159,7 +160,8 @@ public class Graphics_activity extends AppCompatActivity{
                             Integer temp = toSend.getTo();
                             toSend.setTo(toSend.getFrom());
                             toSend.setFrom(temp);
-                            buying_interface.setBuying(toSend, fixPriceSell).enqueue(new Callback<Buying>() {
+                            toSend.setCost_user(fixPriceSell);
+                            buying_interface.setBuying(toSend).enqueue(new Callback<Buying>() {
                                 @Override
                                 public void onResponse(Call<Buying> call, Response<Buying> response) {
                                     if(response.body().getStatus().equals(200)){
