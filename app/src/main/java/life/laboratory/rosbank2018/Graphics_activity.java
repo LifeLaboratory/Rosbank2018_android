@@ -43,6 +43,8 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.widget.Toast.LENGTH_LONG;
+
 
 public class Graphics_activity extends AppCompatActivity{
     public Dialog dia;
@@ -76,7 +78,7 @@ public class Graphics_activity extends AppCompatActivity{
     //Переход в окно оплаты покупки
     private View.OnClickListener buyListener = new View.OnClickListener() {
         public void onClick(View v) {
-            final TextView count = (TextView) findViewById(R.id.count);
+            final EditText count = (EditText) findViewById(R.id.count);
             final Buying.Buy_class toSend = new Buying.Buy_class();
             toSend.setFrom(Integer.valueOf(id_from));
             toSend.setTo(Integer.valueOf(id_to));
@@ -88,18 +90,22 @@ public class Graphics_activity extends AppCompatActivity{
             buying_interface = retrofit.create(Buying_interface.class); //Создаем объект, при помощи которого будем выполнять за// просы
             AlertDialog.Builder builder = new AlertDialog.Builder(Graphics_activity.this);
             dia = builder.create();
+            Log.d("ROSBANK2018", "I'm okay");
             LayoutInflater inflater = Graphics_activity.this.getLayoutInflater();
             builder.setView(inflater.inflate(R.layout.buy_dialog, null))
                     .setPositiveButton("Купить", new DialogInterface.OnClickListener() {
+
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
+                            Log.d("ROSBANK2018", "I'm okay");
+
                             toSend.setAction("sales");
                             toSend.setCount_send(Integer.valueOf(count.getText().toString()));
                             buying_interface.setBuying(toSend).enqueue(new Callback<Buying>() {
                                 @Override
                                 public void onResponse(Call<Buying> call, Response<Buying> response) {
-                                    if(response.body().getStatus().equals(200)){
-                                        Toast.makeText(getApplicationContext(),"Покупка совершена",Toast.LENGTH_LONG).show();
+                                    if(response.body().getStatus()==200){
+                                        Toast.makeText(getApplicationContext(),"Покупка совершена",LENGTH_LONG).show();
                                         dia.cancel();
                                     }
                                     else{
@@ -143,8 +149,7 @@ public class Graphics_activity extends AppCompatActivity{
                             });
                         }
                     });
-        }
-    };
+            builder.show();
         }
     };
     String titleForGraph;
