@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Проведение операции"
+        android:textSize="24sp"
+        android:textColor="#fff"
+        android:background="@color/colorAccent"
+        android:id="@+id/dialog_title"
+        android:textAlignment="center"
+        android:padding="10dp"/>
     <EditText
         android:text="0"
+        android:textSize="18sp"
         android:id="@+id/count"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="number"
         android:padding="10dp"/>
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
