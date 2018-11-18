@@ -58,6 +58,7 @@ public class GraphFragment extends Fragment {
         info.getQuotations(UUID, "list").enqueue(new Callback<Quotations>() {
             @Override
             public void onResponse(Call<Quotations> call, Response<Quotations> response) {
+                if (response.body().getQuotation() != null) {
                 forList = new String[response.body().getQuotation().length];
                 for (Quotations.Quotation q : response.body().getQuotation()){
                     Log.d("ROSBANK2018", q.getName());
@@ -69,7 +70,7 @@ public class GraphFragment extends Fragment {
 
                 Currency_adapter adapter = new Currency_adapter(getContext(), forList);
                 listView.setAdapter(adapter);
-            }
+            }}
 
             @Override
             public void onFailure(Call<Quotations> call, Throwable t) {

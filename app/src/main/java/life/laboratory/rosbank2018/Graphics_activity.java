@@ -29,9 +29,14 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.widget.Toast.LENGTH_LONG;
 
 
 public class Graphics_activity extends AppCompatActivity{
@@ -65,7 +70,7 @@ public class Graphics_activity extends AppCompatActivity{
     //Переход в окно оплаты покупки
     private View.OnClickListener buyListener = new View.OnClickListener() {
         public void onClick(View v) {
-            final TextView count = (TextView) findViewById(R.id.count);
+            final EditText count = (EditText) findViewById(R.id.count);
             final Buying.Buy_class toSend = new Buying.Buy_class();
             toSend.setFrom(Integer.valueOf(id_from));
             toSend.setTo(Integer.valueOf(id_to));
@@ -77,17 +82,21 @@ public class Graphics_activity extends AppCompatActivity{
             buying_interface = retrofit.create(Buying_interface.class); //Создаем объект, при помощи которого будем выполнять за// просы
             AlertDialog.Builder builder = new AlertDialog.Builder(Graphics_activity.this);
             dia = builder.create();
+            Log.d("ROSBANK2018", "I'm okay");
             LayoutInflater inflater = Graphics_activity.this.getLayoutInflater();
             builder.setView(inflater.inflate(R.layout.buy_dialog, null))
                     .setPositiveButton("Купить", new DialogInterface.OnClickListener() {
+
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
+                            Log.d("ROSBANK2018", "I'm okay");
+
                             toSend.setAction("sales");
                             toSend.setCount_send(Integer.valueOf(count.getText().toString()));
                             buying_interface.setBuying(toSend).enqueue(new Callback<Buying>() {
                                 @Override
                                 public void onResponse(Call<Buying> call, Response<Buying> response) {
-                                    if(response.body().getStatus().equals(200)){
+                                    if(response.body().getStatus()==200){
                                         Toast.makeText(getApplicationContext(),"Покупка совершена",LENGTH_LONG).show();
                                         dia.cancel();
                                     }
@@ -132,9 +141,10 @@ public class Graphics_activity extends AppCompatActivity{
                             });
                         }
                     });
+            builder.show();
         }
     };
-    String session, titleForGraph;
+    String titleForGraph;
     LineGraphSeries <DataPoint> series_one, series_two;
     DataPoint[] oneData, twoData;
     @Override
@@ -180,30 +190,9 @@ public class Graphics_activity extends AppCompatActivity{
         temp.setQuant("second");
         temp.setTO(Integer.valueOf(id_from));
         temp.setSession(session);
-        graph_interface.setQuery(temp).enqueue(new Callback<Model>() {
-            @Override
-            public void onResponse(Call<Model> call, Response<Model> response) {
-                Model.quatation q = null;
-                Model.quatation[] arr = response.body().getQuatation();
-                for (int i = 0; i < arr.length; i++) {
-                    q = arr[i];
-                    Log.d("ROSBANK2018", String.valueOf(Double.valueOf(i)) + " " + String.valueOf(q.getCountPurchase()));
-                    Log.d("ROSBANK2018", String.valueOf(Double.valueOf(i)) + " " + String.valueOf(q.getCountSale()));
-                    series_one.appendData(new DataPoint((double) i, q.getCountPurchase()), true, );
-                    series_two.appendData(new DataPoint((double) i, q.getCountSale()), true, 500);
-                }
-                series_one.setColor(Color.BLACK);
-                series_two.setColor(Color.RED);
-                graphView.addSeries(series_one);
-                graphView.addSeries(series_two);
-            }
-            @Override
-            public void onFailure(Call<Model> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Нет соединения с сервером",LENGTH_LONG).show();
-            }
-        });
         Button buy = (Button) findViewById(R.id.buy_button);
         buy.setOnClickListener(buyListener);
+
         graph_interface.setQuery(temp).subscribeOn(Schedulers.newThread())
                 .repeatWhen(a -> a.flatMap(n -> Observable.timer(5, TimeUnit.SECONDS)))
                 .retryWhen(a -> a.flatMap(n -> Observable.timer(5, TimeUnit.SECONDS)))
