@@ -31,8 +31,25 @@
         android:background="#fff"
         android:textColor="@color/colorAccent"
         android:text="Отмена" />
-    <Button
+    <TextView
+        android:id="@+id/moment_price_buy"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textAlignment="viewEnd"
+        android:textSize="24dp"
+        android:textColor="@color/colorAccent"
+        />
+    <TextView
+        android:id="@+id/moment_price_sell"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textAlignment="viewEnd"
+        android:textColor="@color/colorAccent"
+        />
+    <Button
+        android:layout_width="10dp"
         android:layout_height="wrap_content"
         android:id="@+id/buy_button"/>
 

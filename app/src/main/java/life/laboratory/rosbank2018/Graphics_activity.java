@@ -48,7 +48,8 @@ import static android.widget.Toast.LENGTH_LONG;
 
 public class Graphics_activity extends AppCompatActivity{
     public Dialog dia;
-
+    public Double fixPriceBuy;
+    public Double fixPriceSell;
     public String id_from;
     public String id_to;
     public String session;
@@ -78,6 +79,8 @@ public class Graphics_activity extends AppCompatActivity{
     //Переход в окно оплаты покупки
     private View.OnClickListener buyListener = new View.OnClickListener() {
         public void onClick(View v) {
+            fixPriceBuy = Double.valueOf(((TextView)findViewById(R.id.moment_price_buy)).getText().toString());
+            fixPriceSell = Double.valueOf(((TextView)findViewById(R.id.moment_price_sell)).getText().toString());
             final EditText count = (EditText) findViewById(R.id.count);
             final Buying.Buy_class toSend = new Buying.Buy_class();
             toSend.setFrom(Integer.valueOf(id_from));
@@ -101,7 +104,7 @@ public class Graphics_activity extends AppCompatActivity{
 
                             toSend.setAction("sales");
                             toSend.setCount_send(Integer.valueOf(count.getText().toString()));
-                            buying_interface.setBuying(toSend).enqueue(new Callback<Buying>() {
+                            buying_interface.setBuying(toSend, fixPriceBuy).enqueue(new Callback<Buying>() {
                                 @Override
                                 public void onResponse(Call<Buying> call, Response<Buying> response) {
                                     if(response.body().getStatus()==200){
@@ -129,7 +132,7 @@ public class Graphics_activity extends AppCompatActivity{
                             Integer temp = toSend.getTo();
                             toSend.setTo(toSend.getFrom());
                             toSend.setFrom(temp);
-                            buying_interface.setBuying(toSend).enqueue(new Callback<Buying>() {
+                            buying_interface.setBuying(toSend, fixPriceSell).enqueue(new Callback<Buying>() {
                                 @Override
                                 public void onResponse(Call<Buying> call, Response<Buying> response) {
                                     if(response.body().getStatus().equals(200)){
