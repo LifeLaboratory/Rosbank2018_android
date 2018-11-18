@@ -27,7 +27,9 @@
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:text="boris"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:backgroundTint="@color/colorAccent"
+            android:textColorHint="@color/colorAccent" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -43,7 +45,9 @@
             android:inputType="textPassword"
             android:maxLines="1"
             android:text="boris"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:backgroundTint="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"/>
 
     </android.support.design.widget.TextInputLayout>
 
