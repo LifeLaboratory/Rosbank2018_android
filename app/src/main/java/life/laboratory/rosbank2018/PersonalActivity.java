@@ -17,6 +17,7 @@ public class PersonalActivity extends AppCompatActivity {
     private TextView mTextMessage;
 
     private String UUID;
+    private String STATUS_PACK;
 
     public void setUUID(String UUID) {
         this.UUID = UUID;
@@ -38,6 +39,7 @@ public class PersonalActivity extends AppCompatActivity {
                     selectedFragment = new PersonalFragment();
                     ((PersonalFragment) selectedFragment).setContext(PersonalActivity.this);
                     ((PersonalFragment) selectedFragment).setUUID(UUID);
+                    ((PersonalFragment) selectedFragment).setSTATUS_PACK(STATUS_PACK);
                     getSupportFragmentManager().beginTransaction().replace(R.id.content, selectedFragment).commit();
                 } break;
                 case R.id.navigation_graph: {
@@ -65,6 +67,7 @@ public class PersonalActivity extends AppCompatActivity {
         decorView.setSystemUiVisibility(uiOptions);
 
         this.UUID = getIntent().getStringExtra(Constants.UUID);
+        this.STATUS_PACK = getIntent().getStringExtra(Constants.STATUS_PACK);
 
         Log.d("ROSBANK2018", this.UUID);
 

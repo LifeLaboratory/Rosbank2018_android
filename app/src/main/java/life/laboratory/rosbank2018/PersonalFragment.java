@@ -23,6 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class PersonalFragment extends Fragment {
 
     private String UUID;
+    private String STATUS_PACK;
     private View view;
     private Server info;
 
@@ -43,6 +44,7 @@ public class PersonalFragment extends Fragment {
             @Override
             public void onResponse(Call<Person> call, Response<Person> response) {
                 ((TextView) view.findViewById(R.id.message)).setText(response.body().getName());
+                ((TextView) view.findViewById(R.id.user_status)).setText(STATUS_PACK);//???
                 String[] forList = new String[response.body().getCurrency().length];
                 for (int i = 0; i < response.body().getCurrency().length; i++) {
                     forList[i] = response.body().getCurrency()[i].getIdCurrency() + "#" + response.body().getCurrency()[i].getNameCurrency() + "#" + String.valueOf(response.body().getCurrency()[i].getCost());
@@ -70,6 +72,14 @@ public class PersonalFragment extends Fragment {
 
     public void setUUID(String UUID) {
         this.UUID = UUID;
+    }
+
+    public String getSTATUS_PACK() {
+        return STATUS_PACK;
+    }
+
+    public void setSTATUS_PACK(String STATUS_PACK) {
+        this.STATUS_PACK = STATUS_PACK;
     }
 
     private Context context;

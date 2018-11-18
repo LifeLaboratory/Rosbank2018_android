@@ -16,7 +16,17 @@
         android:text="@string/title_dashboard"
         android:textSize="24dp"
         android:layout_marginTop="15dp"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:textColor="#000"/>
+    <TextView
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_status"
+        android:text="Статус"
+        android:textSize="20dp"
+        android:textColor="#000"
+        />
 
     <ListView
         android:layout_width="match_parent"
