@@ -82,6 +82,7 @@ public class Graphics_activity extends AppCompatActivity{
             fixPriceBuy = Double.valueOf(((TextView)findViewById(R.id.moment_price_buy)).getText().toString());
             fixPriceSell = Double.valueOf(((TextView)findViewById(R.id.moment_price_sell)).getText().toString());
             final EditText count = (EditText) findViewById(R.id.count);
+
             final Buying.Buy_class toSend = new Buying.Buy_class();
             toSend.setFrom(Integer.valueOf(id_from));
             toSend.setTo(Integer.valueOf(id_to));
@@ -93,20 +94,19 @@ public class Graphics_activity extends AppCompatActivity{
             buying_interface = retrofit.create(Buying_interface.class); //Создаем объект, при помощи которого будем выполнять за// просы
             AlertDialog.Builder builder = new AlertDialog.Builder(Graphics_activity.this);
             dia = builder.create();
-            Log.d("ROSBANK2018", "I'm okay");
             LayoutInflater inflater = Graphics_activity.this.getLayoutInflater();
-            builder.setView(inflater.inflate(R.layout.buy_dialog, null))
+            View view = inflater.inflate(R.layout.buy_dialog, null);
+            builder.setView(view)
                     .setPositiveButton("Купить", new DialogInterface.OnClickListener() {
-
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            Log.d("ROSBANK2018", "I'm okay");
-
                             toSend.setAction("sales");
+                            EditText count = view.findViewById(R.id.count);
                             toSend.setCount_send(Integer.valueOf(count.getText().toString()));
                             buying_interface.setBuying(toSend, fixPriceBuy).enqueue(new Callback<Buying>() {
                                 @Override
                                 public void onResponse(Call<Buying> call, Response<Buying> response) {
+                                    Log.d("ROSBANK2018", String.valueOf(response.body().getStatus()));
                                     if(response.body().getStatus()==200){
                                         Toast.makeText(getApplicationContext(),"Покупка совершена",LENGTH_LONG).show();
                                         dia.cancel();
@@ -124,8 +124,35 @@ public class Graphics_activity extends AppCompatActivity{
                             });
                         }
                     })
-                    .setNegativeButton("Продать", new DialogInterface.OnClickListener() {
+                    .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
+                            dia.cancel();
+                        }
+                    });
+            builder.show();
+        }
+    };
+
+    private View.OnClickListener saleListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            final Buying.Buy_class toSend = new Buying.Buy_class();
+            toSend.setFrom(Integer.valueOf(id_from));
+            toSend.setTo(Integer.valueOf(id_to));
+            toSend.setSession(session);
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(Constants.SERVER_IP) //Базовая часть адреса
+                    .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
+                    .build();
+            buying_interface = retrofit.create(Buying_interface.class); //Создаем объект, при помощи которого будем выполнять за// просы
+            AlertDialog.Builder builder = new AlertDialog.Builder(Graphics_activity.this);
+            dia = builder.create();
+            LayoutInflater inflater = Graphics_activity.this.getLayoutInflater();
+            View view = inflater.inflate(R.layout.buy_dialog, null);
+            builder.setView(view)
+                    .setPositiveButton("Продать", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+                            EditText count = view.findViewById(R.id.count);
                             toSend.setAction("purchase");
                             toSend.setCount_send(Integer.valueOf(count.getText().toString()));
                             //меняем местами для продажи from и to
@@ -151,10 +178,17 @@ public class Graphics_activity extends AppCompatActivity{
                                 }
                             });
                         }
+                    })
+                    .setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dia.cancel();
+
+                        }
                     });
             builder.show();
         }
     };
+
     String titleForGraph;
     LineGraphSeries <DataPoint> series_one, series_two;
     DataPoint[] oneData, twoData;
@@ -199,8 +233,8 @@ public class Graphics_activity extends AppCompatActivity{
         temp.setQuant("second");
         temp.setTO(Integer.valueOf(id_from));
         temp.setSession(session);
-        Button buy = (Button) findViewById(R.id.buy_button);
-        buy.setOnClickListener(buyListener);
+        ((Button) findViewById(R.id.buy_btn)).setOnClickListener(buyListener);
+        ((Button) findViewById(R.id.sell_btn)).setOnClickListener(saleListener);
 
         graphView.setOnTouchListener(new View.OnTouchListener() {
             @Override

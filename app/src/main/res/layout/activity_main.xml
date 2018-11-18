@@ -52,8 +52,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/log_button_user"
         android:text="Вход"
-        android:background="#fff"
-        android:textColor="@color/colorAccent"/>
+        android:textColor="#fff"
+        android:background="@color/colorAccent"/>
 
     <!--<Button-->
         <!--android:layout_width="match_parent"-->

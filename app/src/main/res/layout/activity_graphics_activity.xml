@@ -14,23 +14,10 @@
         android:id="@+id/kurs_title"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="25dp"
+        android:textColor="#000"
         android:textSize="32dp"
         android:textAlignment="center"/>
 
-    <com.jjoe64.graphview.GraphView
-        android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:layout_centerVertical="true"
-        android:id="@+id/graphView" />
-
-    <Button
-        android:id="@+id/cancel_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#fff"
-        android:textColor="@color/colorAccent"
-        android:text="Отмена" />
     <TextView
         android:id="@+id/moment_price_buy"
         android:layout_width="match_parent"
@@ -48,9 +35,47 @@
         android:textAlignment="viewEnd"
         android:textColor="@color/colorAccent"
         />
-    <Button
-        android:layout_width="10dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/buy_button"/>
 
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_centerVertical="true"
+        android:id="@+id/graphView" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="60dp">
+        <Button
+            android:layout_weight="0.5"
+            android:id="@+id/sell_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorAccent"
+            android:textColor="#fff"
+            android:text="Продать" />
+        <Button
+            android:layout_weight="0.5"
+            android:id="@+id/buy_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/colorAccent"
+            android:textColor="#fff"
+            android:text="Купить" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/cancel_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#fff"
+        android:textColor="@color/colorAccent"
+        android:text="Отмена" />
+
+   
 </RelativeLayout>
