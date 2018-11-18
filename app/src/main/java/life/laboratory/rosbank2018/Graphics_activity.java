@@ -98,6 +98,8 @@ public class Graphics_activity extends AppCompatActivity{
             dia = builder.create();
             LayoutInflater inflater = Graphics_activity.this.getLayoutInflater();
             View view = inflater.inflate(R.layout.buy_dialog, null);
+            TextView title = (TextView) view.findViewById(R.id.dialog_title);
+            title.setText("Покупка");
             builder.setView(view)
                     .setPositiveButton("Купить", new DialogInterface.OnClickListener() {
                         @Override
@@ -151,6 +153,8 @@ public class Graphics_activity extends AppCompatActivity{
             dia = builder.create();
             LayoutInflater inflater = Graphics_activity.this.getLayoutInflater();
             View view = inflater.inflate(R.layout.buy_dialog, null);
+            TextView title = (TextView) view.findViewById(R.id.dialog_title);
+            title.setText("Продажа");
             builder.setView(view)
                     .setPositiveButton("Продать", new DialogInterface.OnClickListener() {
                         @Override
