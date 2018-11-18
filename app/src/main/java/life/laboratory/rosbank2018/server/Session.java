@@ -4,6 +4,7 @@ public class Session {
 
     private String Session;
     private String Code;
+    private String Status_pack;
 
     public String getSession() {
         return Session;
@@ -19,5 +20,13 @@ public class Session {
 
     public void setCode(String code) {
         Code = code;
+    }
+
+    public String getStatusPack() {
+        return Status_pack;
+    }
+
+    public void setStatusPack(String status_pack) {
+        Status_pack = status_pack;
     }
 }
