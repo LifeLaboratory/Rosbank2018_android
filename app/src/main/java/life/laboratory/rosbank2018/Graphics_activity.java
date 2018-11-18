@@ -28,8 +28,10 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -79,8 +81,8 @@ public class Graphics_activity extends AppCompatActivity{
     //Переход в окно оплаты покупки
     private View.OnClickListener buyListener = new View.OnClickListener() {
         public void onClick(View v) {
-            fixPriceBuy = Double.valueOf(((TextView)findViewById(R.id.moment_price_buy)).getText().toString());
-            fixPriceSell = Double.valueOf(((TextView)findViewById(R.id.moment_price_sell)).getText().toString());
+            fixPriceBuy = Double.valueOf(((TextView)findViewById(R.id.moment_price_buy)).getText().toString().split(" ")[0]);
+            fixPriceSell = Double.valueOf(((TextView)findViewById(R.id.moment_price_sell)).getText().toString().split(" ")[0]);
             final EditText count = (EditText) findViewById(R.id.count);
 
             final Buying.Buy_class toSend = new Buying.Buy_class();
@@ -200,6 +202,10 @@ public class Graphics_activity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graphics_activity);
 
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
         retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.SERVER_IP) //Базовая часть адреса
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
@@ -256,8 +262,8 @@ public class Graphics_activity extends AppCompatActivity{
         String patternTo = "HH:mm";
         SimpleDateFormat simpleDateFormatTo = new SimpleDateFormat(patternTo);
         graph_interface.setQuery(temp).subscribeOn(Schedulers.newThread())
-                .repeatWhen(a -> a.flatMap(n -> Observable.timer(5, TimeUnit.SECONDS)))
-                .retryWhen(a -> a.flatMap(n -> Observable.timer(5, TimeUnit.SECONDS)))
+                .repeatWhen(a -> a.flatMap(n -> Observable.timer(1, TimeUnit.SECONDS)))
+                .retryWhen(a -> a.flatMap(n -> Observable.timer(1, TimeUnit.SECONDS)))
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(response -> {
                             Model.quatation q = null;
@@ -282,22 +288,28 @@ public class Graphics_activity extends AppCompatActivity{
                                 if (q.getCountPurchase() > max) {
                                     max = q.getCountPurchase();
                                 }
-                                if (q.getCountSale() < max) {
+                                if (q.getCountSale() > max) {
                                     max = q.getCountSale();
                                 }
                             }
+
+                            ((TextView) findViewById(R.id.moment_price_sell)).setText(String.valueOf(arr[0].getCountSale()) + " " + titleForGraph.split("/")[1]);
+                            ((TextView) findViewById(R.id.moment_price_buy)).setText(String.valueOf(arr[0].getCountPurchase()) + " " + titleForGraph.split("/")[1]);
+
                             series_one = new LineGraphSeries<DataPoint>(oneData);
                             series_two = new LineGraphSeries<DataPoint>(twoData);
                             series_one.setColor(Color.BLACK);
                             series_two.setColor(Color.RED);
-                            if (!touchGraph) {
+//                            if (!touchGraph) {
                                 graphView.removeAllSeries();
                                 graphView.addSeries(series_one);
                                 graphView.addSeries(series_two);
-                            }
-                            graphView.getViewport().setMaxY(max * 1.01);
-                            graphView.getViewport().setMinY(min * 0.99);
+//                            }
+                            Log.d("ROSBANK2018", String.valueOf(max) + " " + String.valueOf(min));
+                            graphView.getViewport().setMaxY(max);
+                            graphView.getViewport().setMinY(min);
                             graphView.getViewport().setScalable(true);
+                            graphView.getViewport().scrollToEnd();
                             graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
                                 @Override
                                 public String formatLabel(double value, boolean isValueX) {
