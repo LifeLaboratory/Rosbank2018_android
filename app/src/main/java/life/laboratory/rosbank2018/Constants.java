@@ -7,4 +7,5 @@ public class Constants {
     public static final String ID_FROM = "id_quatation_from";
     public static final String ID_TO = "id_quatation_to";
     public static final String TITLE_KURS = "title_for_kurs";
+    public static final String STATUS_PACK = "status";
 }

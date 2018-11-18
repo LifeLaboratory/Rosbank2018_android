@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
                         case "client": {
                             Intent toPersonalArea = new Intent(MainActivity.this, PersonalActivity.class);
                             toPersonalArea.putExtra(Constants.UUID, response.body().getSession());
+                            toPersonalArea.putExtra(Constants.STATUS_PACK, response.body().getStatusPack());
                             startActivity(toPersonalArea);
                         } break;
                         case "employee": {
