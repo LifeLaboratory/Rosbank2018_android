@@ -26,7 +26,6 @@
             android:hint="Логин"
             android:inputType="textEmailAddress"
             android:maxLines="1"
-            android:text="boris"
             android:singleLine="true"
             android:backgroundTint="@color/colorAccent"
             android:textColorHint="@color/colorAccent" />
@@ -44,7 +43,6 @@
             android:hint="Пароль"
             android:inputType="textPassword"
             android:maxLines="1"
-            android:text="boris"
             android:singleLine="true"
             android:backgroundTint="@color/colorAccent"
             android:textColorHint="@color/colorAccent"/>

@@ -83,6 +83,7 @@ public class Graphics_activity extends AppCompatActivity{
         public void onClick(View v) {
             fixPriceBuy = Double.valueOf(((TextView)findViewById(R.id.moment_price_buy)).getText().toString().split(" ")[0]);
             fixPriceSell = Double.valueOf(((TextView)findViewById(R.id.moment_price_sell)).getText().toString().split(" ")[0]);
+            Log.e("ROSBANK2018", ((TextView)findViewById(R.id.moment_price_sell)).getText().toString());
             final EditText count = (EditText) findViewById(R.id.count);
 
             final Buying.Buy_class toSend = new Buying.Buy_class();
@@ -140,6 +141,8 @@ public class Graphics_activity extends AppCompatActivity{
 
     private View.OnClickListener saleListener = new View.OnClickListener() {
         public void onClick(View v) {
+            fixPriceBuy = Double.valueOf(((TextView)findViewById(R.id.moment_price_buy)).getText().toString().split(" ")[0]);
+            fixPriceSell = Double.valueOf(((TextView)findViewById(R.id.moment_price_sell)).getText().toString().split(" ")[0]);
             final Buying.Buy_class toSend = new Buying.Buy_class();
             toSend.setFrom(Integer.valueOf(id_from));
             toSend.setTo(Integer.valueOf(id_to));
@@ -164,8 +167,8 @@ public class Graphics_activity extends AppCompatActivity{
                             toSend.setCount_send(Integer.valueOf(count.getText().toString()));
                             //меняем местами для продажи from и to
                             Integer temp = toSend.getTo();
-                            toSend.setTo(toSend.getFrom());
-                            toSend.setFrom(temp);
+                            toSend.setTo(Integer.valueOf(id_from));
+                            toSend.setFrom(Integer.valueOf(id_to));
                             toSend.setCost_user(fixPriceSell);
                             buying_interface.setBuying(toSend).enqueue(new Callback<Buying>() {
                                 @Override
@@ -175,6 +178,7 @@ public class Graphics_activity extends AppCompatActivity{
                                         dia.cancel();
                                     }
                                     else{
+                                        Log.e("ROSBANK2018", String.valueOf(response.body().getStatus()));
                                         Toast.makeText(getApplicationContext(),"Продажа не совершена",Toast.LENGTH_LONG).show();
                                         dia.cancel();
                                     }

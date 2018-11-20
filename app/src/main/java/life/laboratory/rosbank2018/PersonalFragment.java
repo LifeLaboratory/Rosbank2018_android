@@ -45,12 +45,14 @@ public class PersonalFragment extends Fragment {
             public void onResponse(Call<Person> call, Response<Person> response) {
                 ((TextView) view.findViewById(R.id.message)).setText(response.body().getName());
                 ((TextView) view.findViewById(R.id.user_status)).setText(STATUS_PACK);//???
-                String[] forList = new String[response.body().getCurrency().length];
-                for (int i = 0; i < response.body().getCurrency().length; i++) {
-                    forList[i] = response.body().getCurrency()[i].getIdCurrency() + "#" + response.body().getCurrency()[i].getNameCurrency() + "#" + String.valueOf(response.body().getCurrency()[i].getCost());
-                }
-                Currency_adapter adapter = new Currency_adapter(PersonalFragment.this.context, forList);
-                ((ListView) view.findViewById(R.id.user_money)).setAdapter(adapter);
+//                if (response.body().getCurrency() != null) {
+                    String[] forList = new String[response.body().getCurrency().length];
+                    for (int i = 0; i < response.body().getCurrency().length; i++) {
+                        forList[i] = response.body().getCurrency()[i].getIdCurrency() + "#" + response.body().getCurrency()[i].getNameCurrency() + "#" + String.valueOf(response.body().getCurrency()[i].getCost());
+                    }
+                    Currency_adapter adapter = new Currency_adapter(PersonalFragment.this.context, forList);
+                    ((ListView) view.findViewById(R.id.user_money)).setAdapter(adapter);
+//                }
             }
 
             @Override
